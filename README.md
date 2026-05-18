@@ -40,11 +40,11 @@ pip install -r qmt_server/requirements.txt
 
 ```powershell
 # 必需：xtquant 路径（根据实际安装位置调整）
-$env:QMT_XTQUANT_PATH="D:/software/54QMT/国金证券QMT交易端/bin.x64/Lib/site-packages"
+$env:QMT_XTQUANT_PATH="D:/software/QMT/QMT交易端/bin.x64/Lib/site-packages"
 
 # 可选：交易功能配置（如不使用交易接口，可不配置）
-$env:QMT_USERDATA_PATH="D:/software/54QMT/国金QMT交易端模拟/userdata_mini"
-$env:QMT_ACCOUNT_ID="90007183"
+$env:QMT_USERDATA_PATH="D:/software/QMT/QMT交易端模拟/userdata_mini"
+$env:QMT_ACCOUNT_ID="your_account_id"
 
 # 可选：服务端口号（默认 8080）
 $env:QMT_SERVER_PORT="8080"
@@ -253,10 +253,10 @@ qmt-http-service/
 
 ```powershell
 # 错误示例
-$env:QMT_XTQUANT_PATH="D:/software/54QMT/国金证券QMT交易端/bin.x64/Lib/site-packages/xtquant"
+$env:QMT_XTQUANT_PATH="D:/software/QMT/QMT交易端/bin.x64/Lib/site-packages/xtquant"
 
 # 正确示例
-$env:QMT_XTQUANT_PATH="D:/software/54QMT/国金证券QMT交易端/bin.x64/Lib/site-packages"
+$env:QMT_XTQUANT_PATH="D:/software/QMT/QMT交易端/bin.x64/Lib/site-packages"
 ```
 
 ### 2. 健康检查返回 `qmtConnected: false`
