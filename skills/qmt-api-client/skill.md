@@ -7,13 +7,32 @@ description: How to call QMT HTTP Server REST APIs for market data, account info
 
 Call QMT HTTP Server APIs to fetch market data, query accounts, and execute trades.
 
+## Configuration
+
+Set the QMT server URL via environment variable:
+
+```bash
+# Windows (PowerShell)
+$env:QMT_SERVER_URL="http://localhost:8080/api/v1"
+
+# macOS/Linux
+export QMT_SERVER_URL="http://localhost:8080/api/v1"
+
+# Or use ~/.claude/settings.json
+{
+  "env": {
+    "QMT_SERVER_URL": "http://your-server:8080/api/v1"
+  }
+}
+```
+
+Default: `http://localhost:8080/api/v1`
+
 ## Base URL
 
 ```
-http://localhost:8080/api/v1
+${QMT_SERVER_URL:-http://localhost:8080/api/v1}
 ```
-
-Replace `localhost:8080` with actual server address if deployed remotely.
 
 ## Response Format
 
@@ -233,9 +252,10 @@ curl -X POST "http://localhost:8080/api/v1/trade/cancel" \
 ## Python Client Example
 
 ```python
+import os
 import requests
 
-BASE_URL = "http://localhost:8080/api/v1"
+BASE_URL = os.environ.get("QMT_SERVER_URL", "http://localhost:8080/api/v1")
 
 def get_quote(code: str) -> dict:
     """Get single stock quote."""
