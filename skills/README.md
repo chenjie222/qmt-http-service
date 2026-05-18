@@ -8,12 +8,10 @@
 
 ```bash
 # Windows (PowerShell)
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills\qmt-api-client"
-Copy-Item skills/qmt-api-client/SKILL.md "$env:USERPROFILE\.claude\skills\qmt-api-client\SKILL.md"
+Copy-Item -Recurse skills/qmt-api-client "$env:USERPROFILE\.claude\skills\qmt-api-client"
 
 # macOS/Linux
-mkdir -p ~/.claude/skills/qmt-api-client
-cp skills/qmt-api-client/SKILL.md ~/.claude/skills/qmt-api-client/SKILL.md
+cp -r skills/qmt-api-client ~/.claude/skills/qmt-api-client
 ```
 
 安装后的目录结构：
@@ -21,7 +19,32 @@ cp skills/qmt-api-client/SKILL.md ~/.claude/skills/qmt-api-client/SKILL.md
 ```
 ~/.claude/skills/
 └── qmt-api-client/
-    └── SKILL.md    ← 技能文件（必须命名为 SKILL.md，大写）
+    ├── SKILL.md      ← 技能文件（必须命名为 SKILL.md，大写）
+    └── config.json   ← 配置文件（server_url, timeout 等）
+```
+
+## 配置
+
+编辑 `~/.claude/skills/qmt-api-client/config.json`：
+
+```json
+{
+  "server_url": "http://localhost:8080/api/v1",
+  "timeout": {
+    "system": 5,
+    "quote": 10,
+    "kline": 60,
+    "stock_list": 120,
+    "account": 10,
+    "trade": 15
+  }
+}
+```
+
+或通过环境变量覆盖：
+
+```bash
+$env:QMT_SERVER_URL="http://your-server:8080/api/v1"
 ```
 
 ## 可用技能
@@ -53,7 +76,8 @@ QMT HTTP Server REST API 调用指南。
 skills/
 ├── README.md
 └── qmt-api-client/
-    └── SKILL.md     ← 技能文件（固定命名，大写）
+    ├── SKILL.md     ← 技能文件（固定命名，大写）
+    └── config.json  ← 配置文件（可选）
 ```
 
 ## 技能文件格式

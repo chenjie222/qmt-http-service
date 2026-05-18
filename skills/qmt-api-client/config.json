@@ -1,0 +1,16 @@
+{
+  "server_url": "http://localhost:8080/api/v1",
+  "timeout": {
+    "system": 5,
+    "quote": 10,
+    "kline": 60,
+    "stock_list": 120,
+    "account": 10,
+    "trade": 15
+  },
+  "default_count": 100,
+  "max_count": 10000,
+  "env_override": {
+    "QMT_SERVER_URL": "server_url"
+  }
+}

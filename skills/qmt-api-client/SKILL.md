@@ -9,30 +9,34 @@ Call QMT HTTP Server APIs to fetch market data, query accounts, and execute trad
 
 ## Configuration
 
-Set the QMT server URL via environment variable:
+Edit `config.json` in this skill directory to configure server settings:
 
-```bash
-# Windows (PowerShell)
-$env:QMT_SERVER_URL="http://localhost:8080/api/v1"
-
-# macOS/Linux
-export QMT_SERVER_URL="http://localhost:8080/api/v1"
-
-# Or use ~/.claude/settings.json
+```json
 {
-  "env": {
-    "QMT_SERVER_URL": "http://your-server:8080/api/v1"
+  "server_url": "http://localhost:8080/api/v1",
+  "timeout": {
+    "system": 5,
+    "quote": 10,
+    "kline": 60,
+    "stock_list": 120,
+    "account": 10,
+    "trade": 15
   }
 }
 ```
 
-Default: `http://localhost:8080/api/v1`
+**Environment variable override** (higher priority than config.json):
+
+```bash
+# Override server URL
+$env:QMT_SERVER_URL="http://your-server:8080/api/v1"
+```
+
+**Priority**: Environment variable > config.json > default
 
 ## Base URL
 
-```
-${QMT_SERVER_URL:-http://localhost:8080/api/v1}
-```
+Read from `config.json` or override via `QMT_SERVER_URL` environment variable.
 
 ## Response Format
 
@@ -252,18 +256,26 @@ curl -X POST "http://localhost:8080/api/v1/trade/cancel" \
 ## Python Client Example
 
 ```python
+import json
 import os
 import requests
+from pathlib import Path
 
-BASE_URL = os.environ.get("QMT_SERVER_URL", "http://localhost:8080/api/v1")
+# Load config.json
+config_path = Path(__file__).parent / "config.json"
+config = json.loads(config_path.read_text()) if config_path.exists() else {}
+
+# Environment variable override
+BASE_URL = os.environ.get("QMT_SERVER_URL", config.get("server_url", "http://localhost:8080/api/v1"))
+TIMEOUT = config.get("timeout", {})
 
 def get_quote(code: str) -> dict:
     """Get single stock quote."""
-    resp = requests.get(f"{BASE_URL}/market/quote/{code}", timeout=10)
+    resp = requests.get(f"{BASE_URL}/market/quote/{code}", timeout=TIMEOUT.get("quote", 10))
     return resp.json()
 
 def get_kline(code: str, period: str = "1d", 
-              start: str = None, end: str = None, count: int = 100) -> dict:
+              start: str = None, end: str = None, count: int = None) -> dict:
     """Get K-line data. Use start/end for historical, count for recent."""
     params = {"period": period}
     if start and end:
@@ -303,13 +315,15 @@ result = buy("000001", 100, 10.5, confirm=False)  # Preview
 
 ---
 
-## Timeout Recommendations
+## Timeout
+
+Configure in `config.json` or use defaults:
 
 | API | Timeout | Reason |
 |-----|---------|--------|
 | `/system/*` | 5s | Lightweight checks |
-| `/market/quote` | 10-15s | Quick data fetch |
-| `/market/kline` | 60s+ | First call downloads historical data |
+| `/market/quote` | 10s | Quick data fetch |
+| `/market/kline` | 60s | First call downloads historical data |
 | `/market/stock-list` | 120s | Large data download |
 | `/account/*` | 10s | Account queries |
 | `/trade/*` | 15s | Order execution |
