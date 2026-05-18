@@ -9,11 +9,11 @@
 ```bash
 # Windows (PowerShell)
 New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills\qmt-api-client"
-Copy-Item skills/qmt-api-client/skill.md "$env:USERPROFILE\.claude\skills\qmt-api-client\skill.md"
+Copy-Item skills/qmt-api-client/SKILL.md "$env:USERPROFILE\.claude\skills\qmt-api-client\SKILL.md"
 
 # macOS/Linux
 mkdir -p ~/.claude/skills/qmt-api-client
-cp skills/qmt-api-client/skill.md ~/.claude/skills/qmt-api-client/skill.md
+cp skills/qmt-api-client/SKILL.md ~/.claude/skills/qmt-api-client/SKILL.md
 ```
 
 安装后的目录结构：
@@ -21,7 +21,7 @@ cp skills/qmt-api-client/skill.md ~/.claude/skills/qmt-api-client/skill.md
 ```
 ~/.claude/skills/
 └── qmt-api-client/
-    └── skill.md    ← 技能文件（必须命名为 skill.md）
+    └── SKILL.md    ← 技能文件（必须命名为 SKILL.md，大写）
 ```
 
 ## 可用技能
@@ -39,29 +39,13 @@ QMT HTTP Server REST API 调用指南。
 - `/qmt-api-client` 命令
 - Claude 自动识别涉及 QMT API 的任务
 
-## 技能文件格式
-
-技能文件使用以下 frontmatter 格式：
-
-```markdown
----
-name: skill-name
-description: Brief description
-version: 1.0.0
-tags: [tag1, tag2]
----
-
-# Skill Content
-...
-```
-
 ## 添加新技能
 
 1. 在 `skills/` 下创建技能目录：`skills/your-skill-name/`
-2. 在目录中创建 `skill.md` 文件（必须命名为 `skill.md`）
-3. 添加 frontmatter 元数据
+2. 在目录中创建 `SKILL.md` 文件（必须命名为 `SKILL.md`，大写）
+3. 添加 frontmatter 元数据（`name` 和 `description` 必填）
 4. 编写技能内容
-5. 复制到 `~/.claude/skills/your-skill-name/skill.md`
+5. 复制到 `~/.claude/skills/your-skill-name/SKILL.md`
 
 目录结构规范：
 
@@ -69,5 +53,19 @@ tags: [tag1, tag2]
 skills/
 ├── README.md
 └── qmt-api-client/
-    └── skill.md     ← 技能文件（固定命名）
+    └── SKILL.md     ← 技能文件（固定命名，大写）
+```
+
+## 技能文件格式
+
+技能文件使用以下 frontmatter 格式：
+
+```markdown
+---
+name: skill-name
+description: When to trigger and what it does. Make it "pushy" — include specific scenarios even if user doesn't explicitly name the skill.
+---
+
+# Skill Content
+...
 ```

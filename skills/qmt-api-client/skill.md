@@ -1,14 +1,11 @@
 ---
 name: qmt-api-client
-description: Guide for calling QMT HTTP Server REST APIs to fetch market data, account info, and execute trades
-version: 1.0.0
-source: local-repo
-tags: [api, qmt, trading, market-data, python, http]
+description: How to call QMT HTTP Server REST APIs for market data, account info, and trading. Use this skill whenever the user mentions QMT, xtquant, stock quotes, K-line data, tick data, market overview, account assets, positions, orders, trades, buy/sell orders, or any trading-related HTTP API calls — even if they don't explicitly ask for "QMT API" or mention the server by name.
 ---
 
-# QMT HTTP API Client Guide
+# QMT HTTP API Client
 
-Use this skill when calling QMT HTTP Server APIs to fetch market data, account information, or execute trades.
+Call QMT HTTP Server APIs to fetch market data, query accounts, and execute trades.
 
 ## Base URL
 
