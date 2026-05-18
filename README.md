@@ -38,6 +38,10 @@ pip install -r qmt_server/requirements.txt
 
 ### 2. 配置环境变量
 
+支持两种配置方式：环境变量或 `.env` 文件。
+
+#### 方式一：环境变量（PowerShell）
+
 ```powershell
 # 必需：xtquant 路径（根据实际安装位置调整）
 $env:QMT_XTQUANT_PATH="D:/software/QMT/QMT交易端/bin.x64/Lib/site-packages"
@@ -48,6 +52,29 @@ $env:QMT_ACCOUNT_ID="your_account_id"
 
 # 可选：服务端口号（默认 8080）
 $env:QMT_SERVER_PORT="8080"
+```
+
+#### 方式二：.env 文件（推荐）
+
+```bash
+# 复制示例文件
+cp qmt_server/.env.example qmt_server/.env
+
+# 编辑 .env 文件，填写实际值
+```
+
+`.env` 文件示例：
+
+```ini
+# 必需：xtquant 库路径
+QMT_XTQUANT_PATH=D:/software/QMT/QMT交易端/bin.x64/Lib/site-packages
+
+# 可选：交易功能配置
+QMT_USERDATA_PATH=D:/software/QMT/QMT交易端模拟/userdata_mini
+QMT_ACCOUNT_ID=your_account_id
+
+# 可选：服务配置
+QMT_SERVER_PORT=8080
 ```
 
 ### 3. 启动服务
