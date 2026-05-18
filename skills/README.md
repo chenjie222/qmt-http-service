@@ -4,24 +4,24 @@
 
 ## 安装使用
 
-将技能文件复制到 Claude Code 的 skills 目录即可使用：
+将技能目录复制到 Claude Code 的 skills 目录：
 
 ```bash
 # Windows (PowerShell)
-Copy-Item skills/qmt-api-client.md $env:USERPROFILE\.claude\skills\qmt-api-client.md
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills\qmt-api-client"
+Copy-Item skills/qmt-api-client/skill.md "$env:USERPROFILE\.claude\skills\qmt-api-client\skill.md"
 
 # macOS/Linux
-cp skills/qmt-api-client.md ~/.claude/skills/qmt-api-client.md
+mkdir -p ~/.claude/skills/qmt-api-client
+cp skills/qmt-api-client/skill.md ~/.claude/skills/qmt-api-client/skill.md
 ```
 
-或者复制整个目录：
+安装后的目录结构：
 
-```bash
-# Windows
-Copy-Item -Recurse skills $env:USERPROFILE\.claude\skills\qmt-api-client
-
-# macOS/Linux
-cp -r skills ~/.claude/skills/qmt-api-client
+```
+~/.claude/skills/
+└── qmt-api-client/
+    └── skill.md    ← 技能文件（必须命名为 skill.md）
 ```
 
 ## 可用技能
@@ -57,7 +57,17 @@ tags: [tag1, tag2]
 
 ## 添加新技能
 
-1. 创建新的 `.md` 文件
-2. 添加 frontmatter 元数据
-3. 编写技能内容
-4. 复制到 `~/.claude/skills/` 目录
+1. 在 `skills/` 下创建技能目录：`skills/your-skill-name/`
+2. 在目录中创建 `skill.md` 文件（必须命名为 `skill.md`）
+3. 添加 frontmatter 元数据
+4. 编写技能内容
+5. 复制到 `~/.claude/skills/your-skill-name/skill.md`
+
+目录结构规范：
+
+```
+skills/
+├── README.md
+└── qmt-api-client/
+    └── skill.md     ← 技能文件（固定命名）
+```
