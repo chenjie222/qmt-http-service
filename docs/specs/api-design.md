@@ -293,6 +293,64 @@ curl "http://localhost:8080/api/v1/market/kline/000001?period=1d&count=100"
 
 ---
 
+### 3.9 证券详情
+
+**端点**: `GET /api/v1/market/instrument/{code}`
+
+**路径参数**:
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `code` | string | 是 | 6位股票代码或完整代码，如 `000001` 或 `000001.SZ` |
+
+**响应示例**:
+
+```json
+{
+  "success": true,
+  "timestamp": "2026-05-26T10:30:00",
+  "data": {
+    "code": "000001",
+    "fullCode": "000001.SZ",
+    "name": "平安银行",
+    "type": "股票",
+    "exchange": "SZ",
+    "exchangeName": "深圳证券交易所",
+    "listedDate": "19910403",
+    "delisted": false,
+    "floatVolume": 19405757432.0,
+    "totalVolume": 19405757432.0
+  },
+  "message": "Get instrument 000001"
+}
+```
+
+**字段说明**:
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `code` | string | 6位股票代码 |
+| `fullCode` | string | 完整代码，含交易所后缀 |
+| `name` | string | 证券名称 |
+| `type` | string | 证券类型（股票/基金/指数等） |
+| `exchange` | string | 交易所代码（SH/SZ/BJ） |
+| `exchangeName` | string | 交易所中文名 |
+| `listedDate` | string | 上市日期，格式 YYYYMMDD |
+| `delisted` | bool | 是否已退市 |
+| `floatVolume` | number | 流通股本（股），无法获取时为 null |
+| `totalVolume` | number | 总股本（股），无法获取时为 null |
+
+**curl 示例**:
+
+```bash
+# 证券详情（含流通股本和总股本）
+curl "http://localhost:8080/api/v1/market/instrument/000001"
+```
+
+**超时建议**: 10 秒
+
+---
+
 ## 4. 账户接口 (Account)
 
 **Base URL**: `/api/v1/account`
@@ -413,6 +471,7 @@ curl "http://localhost:8080/api/v1/market/kline/000001?period=1d&count=100"
 | `/market/kline/{code}` | 60 秒 | 首次调用需下载历史数据 |
 | `/market/tick/{code}` | 10 秒 | 五档盘口 |
 | `/market/stock-list` | 120 秒 | 首次调用需下载板块数据 |
+| `/market/instrument/{code}` | 10 秒 | 证券详情，轻量级查询 |
 | `/account/asset` | 10 秒 | 账户资产 |
 | `/trade/buy` | 15 秒 | 买入下单 |
 
@@ -536,6 +595,7 @@ curl "http://localhost:8080/api/v1/market/tick?codes=000001,600519"
 curl "http://localhost:8080/api/v1/market/market-overview"
 curl "http://localhost:8080/api/v1/market/stock-list"
 curl "http://localhost:8080/api/v1/market/blocks"
+curl "http://localhost:8080/api/v1/market/instrument/000001"
 
 # 账户接口
 curl "http://localhost:8080/api/v1/account/asset"

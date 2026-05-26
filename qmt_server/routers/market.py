@@ -279,31 +279,39 @@ async def get_trading_dates(
 
 @router.get("/instrument/{code}", response_model=APIResponse)
 async def get_instrument(code: str):
-    """Get instrument detail"""
+    """Get instrument detail including 流通股本 and 总股本"""
     try:
         service = get_xtquant_service()
-        quote = service.get_quote(code)
+        instrument = service.get_instrument_detail(code)
 
-        if quote is None:
-            raise HTTPException(status_code=404, detail=f"Instrument not found: {code}")
-
-        # Build instrument detail from quote
-        instrument = {
-            "code": code,
-            "fullCode": quote['fullCode'],
-            "name": quote.get('name', ''),
-            "type": "股票",
-            "exchange": quote['fullCode'].split('.')[1],
-            "exchangeName": service._get_market_name(quote['fullCode']),
-            "listedDate": None,
-            "delisted": False
-        }
+        if instrument is None:
+            # Fallback: build minimal instrument from quote data
+            quote = service.get_quote(code)
+            if quote is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Instrument not found: {code}"
+                )
+            instrument = {
+                "code": code,
+                "fullCode": quote['fullCode'],
+                "name": quote.get('name', ''),
+                "type": "股票",
+                "exchange": quote['fullCode'].split('.')[1],
+                "exchangeName": service._get_market_name(quote['fullCode']),
+                "listedDate": None,
+                "delisted": False,
+                "floatVolume": None,
+                "totalVolume": None,
+            }
 
         return APIResponse(
             success=True,
             data=instrument,
             message=f"Get instrument {code}"
         )
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error getting instrument: {e}")
         raise HTTPException(status_code=500, detail=str(e))

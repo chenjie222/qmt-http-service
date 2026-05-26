@@ -170,6 +170,43 @@ class XTQuantService:
         }
         return names.get(exchange, '未知交易所')
 
+    def get_instrument_detail(self, code: str) -> Optional[Dict]:
+        """Get instrument detail including 流通股本 (FloatVolume) and 总股本 (TotalVolume)
+
+        Args:
+            code: 6-digit stock code or full code (e.g., '000001' or '000001.SZ')
+
+        Returns:
+            Dict with instrument details including floatVolume/totalVolume,
+            or None if lookup fails.
+        """
+        _ensure_xtdata()
+
+        full_code = self._resolve_code(code)
+
+        try:
+            detail = xtdata.get_instrument_detail(full_code)
+
+            if detail is None:
+                logger.warning(f"Instrument detail returned None for {full_code}")
+                return None
+
+            return {
+                'code': code,
+                'fullCode': full_code,
+                'name': detail.get('InstrumentName', ''),
+                'type': detail.get('InstrumentType', ''),
+                'exchange': detail.get('ExchangeID', full_code.split('.')[1]),
+                'exchangeName': self._get_market_name(full_code),
+                'listedDate': str(detail.get('ListedDate', '')) if detail.get('ListedDate') else None,
+                'delisted': bool(detail.get('IsDelisting', False)),
+                'floatVolume': float(detail['FloatVolume']) if detail.get('FloatVolume', 0) > 0 else None,
+                'totalVolume': float(detail['TotalVolume']) if detail.get('TotalVolume', 0) > 0 else None,
+            }
+        except Exception as e:
+            logger.error(f"Failed to get instrument detail for {code}: {e}")
+            return None
+
     def get_quote(self, code: str) -> Optional[Dict]:
         """Get single stock quote"""
         _ensure_xtdata()

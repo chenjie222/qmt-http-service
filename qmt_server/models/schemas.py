@@ -174,6 +174,8 @@ class InstrumentDetail(BaseModel):
     exchange_name: str = Field(..., alias="exchangeName")
     listed_date: Optional[str] = Field(None, alias="listedDate")
     delisted: bool = False
+    float_volume: Optional[float] = Field(None, alias="floatVolume")
+    total_volume: Optional[float] = Field(None, alias="totalVolume")
 
 
 class SubscribeRequest(BaseModel):
