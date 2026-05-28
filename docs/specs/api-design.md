@@ -199,7 +199,7 @@ curl "http://localhost:8080/api/v1/market/kline/000001?period=1d&count=100"
     "count": 2064,
     "kline": [
       {
-        "date": "20260302",
+        "date": "20260302093000",
         "open": 10.85,
         "high": 10.86,
         "low": 10.81,
@@ -228,7 +228,7 @@ curl "http://localhost:8080/api/v1/market/kline/000001?period=1d&count=100"
     "count": 10,
     "kline": [
       {
-        "date": "20260518",
+        "date": "20260518093000",
         "open": 10.88,
         "high": 10.88,
         "low": 10.87,

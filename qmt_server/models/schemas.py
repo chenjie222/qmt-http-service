@@ -62,7 +62,7 @@ class QuoteResponse(BaseModel):
 
 class KlineItem(BaseModel):
     """Single Kline data point"""
-    date: str = Field(..., description="日期格式 YYYYMMDD")
+    date: str = Field(..., description="日期时间格式 YYYYMMDDHHMMSS")
     open: float
     high: float
     low: float

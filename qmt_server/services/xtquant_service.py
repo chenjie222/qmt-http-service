@@ -107,6 +107,32 @@ class XTQuantService:
         """Extract 6-digit code from full code"""
         return full_code.split('.')[0]
 
+    @staticmethod
+    def _format_kline_date(value: Any) -> str:
+        """Normalize kline index/time to YYYYMMDDHHMMSS."""
+        if isinstance(value, tuple) and value:
+            value = value[-1]
+
+        if isinstance(value, datetime):
+            return value.strftime('%Y%m%d%H%M%S')
+
+        if hasattr(value, 'to_pydatetime'):
+            return value.to_pydatetime().strftime('%Y%m%d%H%M%S')
+
+        text = str(value).strip()
+        digits = ''.join(ch for ch in text if ch.isdigit())
+
+        if len(digits) >= 14:
+            return digits[:14]
+        if len(digits) == 12:
+            return f"{digits}00"
+        if len(digits) == 8:
+            return f"{digits}000000"
+        if len(digits) > 8:
+            return digits.ljust(14, '0')[:14]
+
+        return digits
+
     def download_sector_data(self) -> bool:
         """Download sector data from QMT"""
         try:
@@ -506,7 +532,7 @@ class XTQuantService:
                 if hasattr(code_data, 'iterrows') and not code_data.empty:
                     for idx, row in code_data.iterrows():
                         klines.append({
-                            'date': str(idx).replace('-', '').replace(' ', '').replace(':', '')[:8],
+                            'date': self._format_kline_date(idx),
                             'open': float(row.get('open', 0) if hasattr(row, 'get') else row['open']),
                             'high': float(row.get('high', 0) if hasattr(row, 'get') else row['high']),
                             'low': float(row.get('low', 0) if hasattr(row, 'get') else row['low']),
@@ -517,7 +543,7 @@ class XTQuantService:
                 elif isinstance(code_data, dict):
                     # Single day data as dict
                     klines.append({
-                        'date': datetime.now().strftime('%Y%m%d'),
+                        'date': self._format_kline_date(datetime.now()),
                         'open': float(code_data.get('open', 0)),
                         'high': float(code_data.get('high', 0)),
                         'low': float(code_data.get('low', 0)),
@@ -535,7 +561,7 @@ class XTQuantService:
                 if hasattr(df_data, 'iterrows'):
                     for idx, row in df_data.iterrows():
                         klines.append({
-                            'date': str(idx) if not isinstance(idx, tuple) else str(idx[1]),
+                            'date': self._format_kline_date(idx),
                             'open': float(row.get('open', 0)),
                             'high': float(row.get('high', 0)),
                             'low': float(row.get('low', 0)),

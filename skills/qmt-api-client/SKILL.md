@@ -135,7 +135,7 @@ Parameters:
 | `end` | YYYYMMDD | - | End date, higher priority than count |
 | `count` | 1-10000 | 100 | Number of bars, optional when start/end provided |
 
-Response fields: `code`, `fullCode`, `period`, `count`, `kline[]` (date, open, high, low, close, volume, amount)
+Response fields: `code`, `fullCode`, `period`, `count`, `kline[]` (date in YYYYMMDDHHMMSS, open, high, low, close, volume, amount)
 
 ### Get Tick Data (Five-Level Quote)
 
